@@ -10,6 +10,15 @@ export function padArraysToSameLength(A, B) {
 	return [A, B];
 }
 
+export function padArrayToMinLength(arr, minLength) {
+	let lengthDifference = minLength - arr.length;
+
+	if (lengthDifference > 0) {
+		arr = arr.concat(new Array(lengthDifference).fill(''));
+	}
+
+	return arr;
+}
 export function replaceRandomLetter(A, B) {
 	const mismatchedIndexes = [];
 	for (let i = 0; i < A.length; i++) {
@@ -26,4 +35,8 @@ export function replaceRandomLetter(A, B) {
 	A[randomIndex] = { ...B[randomIndex] };
 
 	return A;
+}
+
+export function deepCopy(obj) {
+	return JSON.parse(JSON.stringify(obj));
 }

@@ -2,7 +2,12 @@
 	import { onMount, tick } from 'svelte';
 	import { SVG } from '@svgdotjs/svg.js';
 	import letters from './letters.js';
-	import { padArraysToSameLength, replaceRandomLetter } from './utils.js';
+	import {
+		padArraysToSameLength,
+		padArrayToMinLength,
+		replaceRandomLetter,
+		deepCopy
+	} from './utils.js';
 
 	onMount(() => {
 		switchLetters('alphabet');
@@ -31,7 +36,8 @@
 		});
 	}
 
-	let rows = 9;
+	let minRows = 9;
+	let rows = minRows;
 	let columns = 4;
 
 	let visibleLetters = [];
@@ -40,6 +46,7 @@
 	let timer;
 
 	function switchLetters(target) {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
 		if (currentlyShowing !== 'alphabet') {
 			target = 'alphabet';
 		}
@@ -48,26 +55,32 @@
 			clearInterval(timer);
 		}
 
-		[letters[target], visibleLetters] = padArraysToSameLength(letters[target], visibleLetters);
+		let targetLetters = deepCopy(letters[target]);
+
+		[targetLetters, visibleLetters] = padArraysToSameLength(targetLetters, visibleLetters);
+
+		rows = Math.max(minRows, Math.ceil(targetLetters.length / columns));
 
 		timer = setInterval(async () => {
-			visibleLetters = replaceRandomLetter(visibleLetters, letters[target]);
+			visibleLetters = replaceRandomLetter(visibleLetters, targetLetters);
 
 			await tick();
 			redrawSvg();
 
-			if (visibleLetters.every((val, i) => val.letter === letters[target][i].letter)) {
+			if (visibleLetters.every((val, i) => val.letter === targetLetters[i].letter)) {
 				currentlyShowing = target;
 				clearInterval(timer);
+				visibleLetters = visibleLetters.filter((letter) => letter.path);
+				rows = Math.max(minRows, Math.ceil(visibleLetters.length / columns));
 			}
 		}, 20);
 	}
 </script>
 
-<div id="grid" style="--rows: {rows}; --columns: {columns};">
-	{#each visibleLetters as { path, letter }, index}
-		<div on:click={() => switchLetters(letter)} class="grid-item">
-			<div id={`svg-container-${index}`} class="letter-container" />
+<div id="grid" style="--rows: {rows}; --minRows: {minRows}; --columns: {columns};">
+	{#each padArrayToMinLength(visibleLetters, minRows * columns) as { path, letter }, index}
+		<div class="grid-item" on:click={() => switchLetters(letter)}>
+			<div class="letter-container" id={`svg-container-${index}`} />
 		</div>
 	{/each}
 </div>
@@ -75,14 +88,11 @@
 <style>
 	#grid {
 		display: grid;
-		grid-template-rows: repeat(var(--rows), 1fr);
 		grid-template-columns: repeat(var(--columns), 1fr);
-		width: 100vw;
-		height: calc(100vw * var(--rows) / var(--columns));
-		max-height: 100vh;
-		max-width: calc(100vh * var(--columns) / var(--rows));
+		width: calc(100vh * var(--columns) / var(--minRows));
 		margin: auto;
 		background-color: #eee;
+		padding: 0 30px;
 	}
 
 	.grid-item {
@@ -95,5 +105,12 @@
 	.letter-container {
 		width: 60%;
 		height: 60%;
+	}
+
+	.letter-container:empty {
+		background-image: url('/dot.svg');
+		background-position-x: center;
+		background-position-y: center;
+		background-size: contain;
 	}
 </style>
