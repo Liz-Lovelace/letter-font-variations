@@ -2,14 +2,51 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<link rel="icon" href="/favicon.svg" />
+		<title>Letter Variations</title>
 		<meta name="viewport" content="width=device-width" />
 		%sveltekit.head%
 	</head>
 	<style>
 		body {
+			background-color: #eee;
 			margin: 0;
 			padding: 0;
+			font-family: 'SF-UI-Display', sans-serif;
+		}
+		@font-face {
+			font-family: 'SF-UI-Display';
+			src: url('/sf-ui-display/sf-ui-display-light-58646b33e0551.woff') format('woff');
+			font-weight: 300;
+			font-style: normal;
+		}
+
+		@font-face {
+			font-family: 'SF-UI-Display';
+			src: url('/sf-ui-display/sf-ui-display-medium-58646be638f96.woff') format('woff');
+			font-weight: 500; /* Bold */
+			font-style: normal;
+		}
+		main {
+			max-width: 30em;
+			margin: auto;
+		}
+
+		p {
+			font-size: 22px;
+			font-weight: 300;
+			line-height: 29px;
+			color: #191919;
+			margin: 30px 45px;
+		}
+
+		strong {
+			font-weight: 500;
+		}
+
+		a {
+			color: #ff0000;
+			text-decoration: none;
 		}
 	</style>
 	<body data-sveltekit-preload-data="hover">
