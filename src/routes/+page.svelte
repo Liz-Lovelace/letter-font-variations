@@ -1,7 +1,7 @@
 <script>
 	import { onMount, tick } from 'svelte';
 	import { SVG } from '@svgdotjs/svg.js';
-	import lettersPromise, { specialPaths } from './letters.js';
+	import letters, { specialPaths } from './letters.js';
 	import LetterGrid from './LetterGrid.svelte';
 	import { redrawSvg } from './utils.js';
 	import {
@@ -12,10 +12,7 @@
 		trimLetters
 	} from './utils.js';
 
-  let letters;
-
 	onMount(() => {
-    letters = lettersPromise();
 		switchLetters('alphabet');
 	});
 
@@ -46,7 +43,7 @@
 			clearInterval(timer);
 		}
 
-		let targetLetters = deepCopy((await letters)[target]);
+		let targetLetters = deepCopy((await letters())[target]);
 
 		if (target == 'alphabet') {
 			targetLetters = padArrayToMinLength(targetLetters, minRows * columns);

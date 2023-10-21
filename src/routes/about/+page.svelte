@@ -4,18 +4,23 @@
 	import letters from '../letters.js';
 	import { onMount } from 'svelte';
 
-	const visibleLetters = Object.entries(letters)
-		.filter(([letter]) => letter !== 'alphabet')
-		.map(([_, paths]) => paths)
-		.flat();
+  let visibleLetters;
 
-	onMount(() => {
-		redrawSvg(visibleLetters, '#f00');
+	let rows;
+	let minRows;
+	let columns = 12;
+
+	onMount(async () => {
+    visibleLetters = Object.entries(await letters())
+      .filter(([letter]) => letter !== 'alphabet')
+      .map(([_, paths]) => paths)
+      .flat();
+    rows = Math.ceil(visibleLetters.length / columns)
+    minRows = rows;
+    await new Promise(r => setTimeout(r, 50));
+    redrawSvg(visibleLetters, '#f00');
 	});
 
-	let rows = 10;
-	let minRows = 10;
-	let columns = 12;
 	let switchLetters = () => {};
 </script>
 
