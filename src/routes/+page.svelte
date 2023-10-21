@@ -25,7 +25,7 @@
 
 	let timer;
 
-	function switchLetters(target) {
+	async function switchLetters(target) {
 		if (target == 'redirect-about') {
 			window.location.href = '/about';
 			return;
@@ -43,7 +43,7 @@
 			clearInterval(timer);
 		}
 
-		let targetLetters = deepCopy(letters[target]);
+		let targetLetters = deepCopy((await letters())[target]);
 
 		if (target == 'alphabet') {
 			targetLetters = padArrayToMinLength(targetLetters, minRows * columns);
