@@ -45,6 +45,6 @@ function filterObject(obj) {
 }
 
 export default async function letters() {
-  let res = await fetch('/letters.svg');
+  let res = await fetch('/letters');
   let fileContent = await res.text();
   return filterObject(svgFilesToPaths(splitSvgDump(fileContent)));}
