@@ -3,7 +3,10 @@ function removeStrokeAttribute(pathString) {
 }
 
 function splitSvgDump(str) {
-	return str.split(/<rect [^>]*\/>/).map((part) => part.trim()).filter((part) => part !== '');
+	return str
+		.split(/<rect [^>]*\/>/)
+		.map((part) => part.trim())
+		.filter((part) => part !== '');
 }
 
 function svgFilesToPaths(rawSvgFiles) {
@@ -35,16 +38,17 @@ export const specialPaths = {
 };
 
 function filterObject(obj) {
-  const filtered = {};
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key) && obj[key].length > 0) {
-      filtered[key] = obj[key];
-    }
-  }
-  return filtered;
+	const filtered = {};
+	for (const key in obj) {
+		if (obj.hasOwnProperty(key) && obj[key].length > 0) {
+			filtered[key] = obj[key];
+		}
+	}
+	return filtered;
 }
 
 export default async function letters() {
-  let res = await fetch('/letters');
-  let fileContent = await res.text();
-  return filterObject(svgFilesToPaths(splitSvgDump(fileContent)));}
+	let res = await fetch('/letters');
+	let fileContent = await res.text();
+	return filterObject(svgFilesToPaths(splitSvgDump(fileContent)));
+}
